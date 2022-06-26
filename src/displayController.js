@@ -1,8 +1,14 @@
+import taskHandler from './taskHandler.js';
+import storageHandler from './storageHandler.js';
+
+import completeIcon from './assets/completed.svg';
+import removeIcon from './assets/delete.svg';
+import editIcon from './assets/edit.svg';
+
 const displayController = (function() {
 
     const body = document.querySelector('body');
     const newTask = document.getElementById('add-task');
-    const tasks = document.querySelectorAll('.task');
 
     const showPopup = function (element) {
         const overlay = document.createElement('div');
@@ -181,6 +187,9 @@ const displayController = (function() {
         const confirm = document.createElement('button');
         confirm.textContent = ConfirmButtonName || 'Save';
         confirm.className = 'confirm';
+        confirm.onclick = () => {
+            confirmTask(title, desc, color, priority, date);
+        }
 
         buttonContainer.append(cancel, confirm);
 
@@ -191,11 +200,115 @@ const displayController = (function() {
     }
 
 
+    // getting the form inputs to create/edit a task
+    function confirmTask (title, desc, color, priority) {
+        const task = {
+            title: title.value || 'Untitled',
+            desc: desc.value || '',
+            color: color.getAttribute('data-value'),
+            priority: priority.getAttribute('data-value')
+        }
+        const selectedProject = document.querySelector('.selected-project');
+
+        taskHandler.insertTask(selectedProject.textContent, task);
+
+    }
+
     // binding the new task button
     newTask.onclick = () => {
         showPopup(createForm('Add'));
     };
 
+
+    // SIDEBAR //
+    const projectsContainer = document.getElementById('projects');
+
+    // update current projects in storage to the DOM
+    const updateProjects = function () {
+        const projects = storageHandler.fetchProjects();
+        projectsContainer.innerHTML = '';
+        console.log(projects);
+
+        projects.forEach((pr) => {
+            const project = document.createElement('button');
+            project.className = 'project';
+            project.textContent = pr;
+            project.onclick = viewTasks;
+            projectsContainer.appendChild(project);
+        })
+    };
+
+    const taskContainer = document.getElementById('tasks');
+    // view tasks of given project on click
+    const viewTasks = function() {
+        const projectTasks = storageHandler.getTasks(this.textContent);
+
+        taskContainer.innerHTML = '';
+        projectTasks.forEach((t) => {
+            createTask(t);
+        });
+
+        removeProjectSelection();
+        this.classList.add('selected-project');
+
+    }
+    
+
+    const removeProjectSelection = function() {
+        const shownProjects = document.querySelectorAll('#projects>button');
+
+        shownProjects.forEach((project) => {
+            project.classList.remove('selected-project');
+        });
+    }
+
+
+    // create task DOM element
+    const createTask = function (task) {
+        const taskElement = document.createElement('div');
+        taskElement.className = 'task';
+
+        const title = document.createElement('p');
+        title.className = 'task-title';
+        title.textContent = task.title;
+        
+        const desc = document.createElement('div');
+        desc.textContent = task.desc;
+        desc.className = 'task-desc';
+
+        const bottomContainer = document.createElement('div');
+        bottomContainer.className = 'task-bottom-container';
+
+        const date = document.createElement('div');
+        date.textContent = task.date;
+        date.className = 'task-date';
+
+        const actionButtons = document.createElement('div');
+        actionButtons.className = 'task-buttons';
+
+        const complete = document.createElement('img');
+        complete.src = completeIcon;
+        complete.alt = 'Complete';
+
+        const edit = document.createElement('img');
+        edit.src = editIcon;
+        edit.alt = 'Edit';
+
+        const remove = document.createElement('img');
+        remove.src = removeIcon;
+        remove.alt = 'Remove';
+
+        actionButtons.append(remove, edit, complete);
+
+        bottomContainer.append(date, actionButtons);
+
+        taskElement.append(title, desc, bottomContainer);
+
+        taskContainer.append(taskElement);
+    }
+
+
+    updateProjects();
 
 })();
 

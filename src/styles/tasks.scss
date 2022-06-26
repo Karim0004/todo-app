@@ -7,6 +7,7 @@
     gap: 16px;
     justify-content: center;
     position: relative;
+    overflow-y:scroll;
 }
 
 .task {
@@ -24,7 +25,7 @@
     color: $color1;
     box-shadow: $shadow;
     
-    p{
+    .task-title{
         text-align: center;
         margin: 0;
         font-size: 1.5em;
@@ -38,14 +39,23 @@
         color: $color3;
     }
 
-    .task-footer {
+    .task-bottom-container {
         display: flex;
         justify-content: space-between;
+        align-items: center;
         font-size: 1.1em;
-        .actions {
+        .task-buttons {
             display: flex;
-            .task-color{
-                background-color: blue;
+            justify-content: flex-end;
+            background-color: $color2;
+            padding: 0px;
+            border-radius: 6px;
+            gap: 5px;
+            overflow: hidden;
+            >* {
+                width: 16px;
+                padding: 4px;
+                filter:invert(1);
             }
         }
     }

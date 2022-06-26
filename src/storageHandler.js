@@ -1,10 +1,12 @@
 const storageHandler = (function() {
+
+    if (localStorage.length === 0) localStorage.setItem("Default", JSON.stringify([]));
     
     // fetch all tasks of a project
     const getTasks = function(project) {
         if (project === 'ID_STORAGE') return null;
         const tasks = localStorage.getItem(project);
-        if (tasks === null) return [];
+        if (tasks === null || tasks === '') return [];
         return JSON.parse(tasks);
     }
     
@@ -49,7 +51,7 @@ const storageHandler = (function() {
 
     // fetch an id from storage and increment the stored id for next fetch
     const fetchId = function() {
-        const id = localStorage.getItem('ID_STORAGE');
+        let id = localStorage.getItem('ID_STORAGE');
         if (id === null) id = '0';
         id = Number(id);
         let nextId = id + 1;
