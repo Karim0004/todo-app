@@ -1,5 +1,6 @@
-import './styles/base';
+import './styles/base.scss';
 import taskHandler from './taskHandler.js';
-console.log('hellofrom JS');
+import displayController from './displayController.js';
 
-const task = {title, desc, date, priority, color, id};
+
+// const task = {title, desc, date, priority, color, id, completed};

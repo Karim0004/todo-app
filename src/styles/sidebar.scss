@@ -1,0 +1,27 @@
+#sidebar {
+    background-color: $color2;
+    padding: 12px;
+    
+    @media (min-width: $mediaQueryThreshold) {
+        max-width: 300px;
+    }
+}
+
+
+#projects {
+    background-color: $color4;
+    border-radius: 24px;
+    padding: 16px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    button {
+        font-family: inherit;
+        font-size: 100%;
+        color: $color1;
+        border: none;
+        border-radius: 999px;
+        padding: 15px 30px;
+        word-wrap: break-word;
+    }
+}

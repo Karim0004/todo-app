@@ -11,7 +11,7 @@ const storageHandler = (function() {
     // add a task
     const add = function (project, task) {
         const tasks = getTasks(project);
-        if (tasks === null) return false;
+        if (tasks === null) return null;
 
         tasks.push(task);
         localStorage.setItem(project, JSON.stringify(tasks));
@@ -20,7 +20,7 @@ const storageHandler = (function() {
     // remove a task
     const remove = function (project, id) {
         const tasks = getTasks(project);
-        if (tasks === null) return false;
+        if (tasks === null) return null;
 
         for (let i in tasks) {
             if (tasks[i].id === id) {
@@ -34,7 +34,7 @@ const storageHandler = (function() {
     
     const replace = function (project, id, task) {
         const tasks = getTasks(project);
-        if (tasks === null) return false;
+        if (tasks === null) return null;
 
         for (let i in tasks) {
             if (tasks[i].id === id) {

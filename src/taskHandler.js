@@ -2,21 +2,34 @@ import storageHandler from './storageHandler.js';
 
 const taskHandler = (function () {
     
-    const create = function (taskObject) {
-        if (!taskObject instanceof Object) return false;
+    const _create = function (taskObject) {
+        if (!taskObject instanceof Object) return null;
 
         const task = {};
         task.title = taskObject.title || '';
         task.desc = taskObject.desc || '';
-        task.priority = taskObject.priority || '';
-        task.date = taskObject.date || '';
+        task.priority = taskObject.priority || '5';
+        task.date = taskObject.date || 'No Date';
         task.color = taskObject.color || '#ffffff';
+        task.completed = taskObject.completed || false;
         task.id = storageHandler.fetchId();
 
         return task;
     }
 
+    const insertTask = function (project, taskObject) {
+        const task = _create(taskObject);
+        if (task === null) return null;
 
+        project = String(project);
+
+        if (project === '' || project === 'null') project = 'Default';
+
+        storageHandler.add(project, task);
+
+    }
+
+    return {insertTask};
 })();
 
 export default taskHandler;
