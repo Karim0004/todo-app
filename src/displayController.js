@@ -4,11 +4,16 @@ import storageHandler from './storageHandler.js';
 import completeIcon from './assets/completed.svg';
 import removeIcon from './assets/delete.svg';
 import editIcon from './assets/edit.svg';
+import addTask from './assets/new-task.svg';
 
 const displayController = (function() {
 
     const body = document.querySelector('body');
-    const newTask = document.getElementById('add-task');
+    const newTask = document.createElement('img');
+    newTask.src = addTask;
+    newTask.id = 'add-task';
+    body.appendChild(newTask);
+
 
     const showPopup = function (element) {
         const overlay = document.createElement('div');
@@ -104,9 +109,12 @@ const displayController = (function() {
     const _showColorSelector = function () {
         const colors = {
             cyan: '#06b6d4',
-            red: '#dc2626',
+            red: '#ef4444',
             yellow: '#facc15',
-            green: '#84cc16'
+            green: '#84cc16',
+            orange: '#fb923c',
+            black: '#1e293b',
+            grey: '#64748b',
         }
 
         _showSelector(colors, this, true);
@@ -166,7 +174,7 @@ const displayController = (function() {
         const color = document.createElement('button');
         color.className = 'color';
 
-        color.setAttribute('data-value', (taskDetails.color || '#aaaaaa'));
+        color.setAttribute('data-value', (taskDetails.color || '#64748b'));
         color.style.backgroundColor = color.getAttribute('data-value');
         color.style.position = 'relative';
         color.onclick = _showColorSelector;

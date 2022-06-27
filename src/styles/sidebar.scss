@@ -1,5 +1,5 @@
 #sidebar {
-    background-color: $color5;
+    background-color: $color1;
     padding: 12px;
     display: flex;
     flex-direction: column;
@@ -8,24 +8,27 @@
 
 
 #projects {
-    background-color: $color4;
+    background-color: $color3;
     border-radius: 8px;
     padding: 16px;
     display: flex;
     flex-direction: column;
     gap: 20px;
+    min-width: max-content;
+    overflow-y: auto;
     .project {
         font-family: inherit;
         font-size: 100%;
         border: none;
+        max-width: 200px;
         border-radius: 8px;
         padding: 12px 32px;
         word-wrap: break-word;
-        background-color: $color3;
+        background-color: $color1;
         color: $color5;
 
         &.selected-project {
-            background-color: $color5;
+            background-color: $color2;
             color: $color3;
         }
 
@@ -46,15 +49,14 @@
 
 #new-project {
     color: $color3;
-    background-color: $color1;
+    background-color: $color2;
     &:hover {
-        background-color: $color2;
         color: $color4;
     }
 }
 
 #remove-project {
-    background-color: #b71111de;
+    background-color: rgba($color: #ac1818, $alpha: 0.8);
     color: $color5;
 }
 

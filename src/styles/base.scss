@@ -28,6 +28,17 @@ body {
     #content {
         flex-direction: column;
     }
+    #projects>.project {
+        max-width: none;
+    }
+
+    #sidebar {
+        max-height: 30vh;
+    }
+    #sidebar>#projects {
+        max-height: 30vh;
+        min-width:auto;
+    }
 }
 
 #add-task {
@@ -37,19 +48,17 @@ body {
     border: none;
     border-radius: 999px;
     color: $color5;
-    background-color: $color2;
-    padding: 2px;
-    width: clamp(80px, 40vw, 250px);
-    height: clamp(70px, 10vh, 120px);
-    font-size: 170%;
-    font-family: inherit;
+    background-color: $color3;
+    padding: 12px;
+    width: clamp(40px, 12vw, 100px);
     transition: all 0.1s ease-in-out;
+    box-shadow: $shadow;
     &:hover {
         transform: translateY(-2px);
-        background-color: $color3;
+        background-color: $color2;
     }
 }
 
-button:active {
+button:active, #add-task:active {
     filter: brightness(1.2);
 }
