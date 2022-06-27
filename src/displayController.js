@@ -191,7 +191,7 @@ const displayController = (function() {
         confirm.textContent = ConfirmButtonName || 'Save';
         confirm.className = 'confirm';
         confirm.onclick = () => {
-            confirmTask(title, desc, color, priority, date, taskDetails.id);
+            confirmTask(title, desc, color, priority, date, taskDetails);
         }
 
         buttonContainer.append(cancel, confirm);
@@ -204,14 +204,15 @@ const displayController = (function() {
 
 
     // getting the form inputs to create/edit a task
-    function confirmTask (title, desc, color, priority, date, id) {
+    function confirmTask (title, desc, color, priority, date, oldTask) {
         const task = {
             title: title.value || 'Untitled',
             desc: desc.value || '',
             color: color.getAttribute('data-value'),
             priority: priority.getAttribute('data-value'),
             date: date.value || 'No Date',
-            id: id || null
+            id: oldTask.id || null,
+            completed: oldTask.completed || false
         }
         const selectedProject = document.querySelector('.selected-project');
         if (selectedProject === null) return null;
@@ -368,7 +369,7 @@ const displayController = (function() {
         const selectedProject = document.querySelector('.selected-project');
         if (selectedProject === null) return null;
 
-        const taskObject = storageHandler.fetchTask(selectedProject.textContent, id);
+        const taskObject = storageHandler.fetchTask(selectedProject.textContent, id) || {};
         
         showPopup(createForm('Save', taskObject));
     }
