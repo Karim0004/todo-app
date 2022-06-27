@@ -4,7 +4,7 @@
     display: flex;
     flex-wrap: wrap;
     align-content: flex-start;
-    gap: 16px;
+    gap: 24px;
     justify-content: center;
     position: relative;
     overflow-y:scroll;
@@ -12,31 +12,48 @@
 
 .task {
     min-width: 100px;
-    background-color: $color3;
+    max-height: 200px;
+    background-color: $color5;
+    border: 1px solid $color3;
+    border-bottom: 8px solid $color3;
     min-height: 100px;
     flex-basis: 200px;
     border-radius: 16px;
-    padding: 12px 16px;
-    font-size: 12px;
+    font-size: 1rem;
+    padding: 12px 16px; 
     display: flex;
     flex-direction: column;
     justify-content: space-between;
     gap: 16px;
     color: $color1;
     box-shadow: $shadow;
+    transition: all 0.2s ease-in-out;
+    &:hover {
+        transform: translateY(-1px);
+        box-shadow: 0px 6px 24px rgba($color: $color1, $alpha: 0.3);
+    }  
+    &:active {
+        transform: scale(1.2);
+    }
     
     .task-title{
         text-align: center;
+        font-weight: bold;
         margin: 0;
         font-size: 1.5em;
     }
 
     .task-desc {
-        background-color: $color5;
+        background-color: rgba($color: $color4, $alpha: 0.3);
         border-radius: 16px;
         min-height: 30px;
         padding: 6px 12px;
         color: $color3;
+        overflow-y: auto;
+        overflow-wrap: break-word;
+        flex: 1;
+
+        font-size: 0.8em;
     }
 
     .task-bottom-container {
@@ -47,7 +64,7 @@
         .task-buttons {
             display: flex;
             justify-content: flex-end;
-            background-color: $color2;
+            background-color: $color4;
             padding: 0px;
             border-radius: 6px;
             gap: 5px;
@@ -55,7 +72,13 @@
             >* {
                 width: 16px;
                 padding: 4px;
-                filter:invert(1);
+                filter:invert(0);
+                transition: all 0.1s ease-in-out;
+                background-color: $color4;
+                &:hover {
+                    transform: scale(1.1);
+                    filter:brightness(1.2);
+                }
             }
         }
     }

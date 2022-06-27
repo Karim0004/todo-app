@@ -163,7 +163,7 @@ const displayController = (function() {
         const color = document.createElement('button');
         color.className = 'color';
 
-        color.setAttribute('data-value', '#ffffff');
+        color.setAttribute('data-value', '#aaaaaa');
         color.style.backgroundColor = color.getAttribute('data-value');
         color.style.position = 'relative';
         color.onclick = _showColorSelector;
@@ -212,6 +212,9 @@ const displayController = (function() {
 
         taskHandler.insertTask(selectedProject.textContent, task);
 
+        viewTasks();
+        hidePopup();
+
     }
 
     // binding the new task button
@@ -233,24 +236,30 @@ const displayController = (function() {
             const project = document.createElement('button');
             project.className = 'project';
             project.textContent = pr;
-            project.onclick = viewTasks;
+            project.onclick = selectProject;
             projectsContainer.appendChild(project);
         })
     };
 
     const taskContainer = document.getElementById('tasks');
     // view tasks of given project on click
-    const viewTasks = function() {
-        const projectTasks = storageHandler.getTasks(this.textContent);
+    const selectProject = function() {
+
+        removeProjectSelection();
+        this.classList.add('selected-project');
+
+        viewTasks();
+
+    }
+
+    const viewTasks = function () {
+        const selectedProject = document.querySelector('.selected-project');
+        const projectTasks = storageHandler.getTasks(selectedProject.textContent);
 
         taskContainer.innerHTML = '';
         projectTasks.forEach((t) => {
             createTask(t);
         });
-
-        removeProjectSelection();
-        this.classList.add('selected-project');
-
     }
     
 
@@ -267,6 +276,11 @@ const displayController = (function() {
     const createTask = function (task) {
         const taskElement = document.createElement('div');
         taskElement.className = 'task';
+        taskElement.style.borderColor = task.color;
+
+        const priorityMultiplier = 100 - 20*task.priority;
+        taskElement.style.flexBasis = `${150 + priorityMultiplier}px`;
+        taskElement.style.fontSize = `${0.6 + priorityMultiplier/150}rem`;
 
         const title = document.createElement('p');
         title.className = 'task-title';
@@ -309,6 +323,15 @@ const displayController = (function() {
 
 
     updateProjects();
+    
+    if (document.querySelector('.selected-project') === null
+    && document.getElementById('projects').hasChildNodes()) {
+        document.querySelector('#projects:first-child').classList.add('selected-project');
+    }
+    
+    viewTasks();
+
+
 
 })();
 
