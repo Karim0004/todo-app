@@ -22,7 +22,7 @@
         display: flex;
         justify-content: center;
         justify-items: center;
-        font-size: 16px;
+        font-size: 2vmin;
         flex-direction: column;
         padding: 16px;
         border-radius: 32px;
@@ -40,11 +40,11 @@
             border-radius: 9px;
             border: none;
             color: inherit;
-            font-size: inherit;
+            font-size: 1rem;
             font-family: inherit;
             transition: all 0.1s ease-in-out;
             &:hover {
-                transform: translateY(1px);
+                transform: translateY(-1px);
                 background-color: $color3;
             }
 
@@ -82,7 +82,7 @@
             padding: 8px 16px;
             border-radius: 12px;
             >div {
-                font-size: 0.7em;
+                font-size: 0.7rem;
                 color: $color1;
                 display: flex;
                 flex-direction: column;
@@ -128,7 +128,7 @@
             box-sizing: border-box;
             resize: vertical;
             font-family: inherit;
-            font-size: 0.8em;
+            font-size: 0.8rem;
             color: $color2;
             outline: none;
             &::placeholder {
@@ -138,7 +138,7 @@
             }
         }
 
-        .title {
+        .title, #new-project-name {
             border-radius: 12px;
             border: 1px solid $color4;
             box-sizing: border-box;
@@ -161,5 +161,14 @@
                 border: 2px solid $color3;
             }
         }
+
+        .message {
+            color: $color2;
+            font-size: 20px;
+            text-align: center;
+            font-weight: 700;
+        }
+
+
 
     }

@@ -72,8 +72,29 @@ const storageHandler = (function() {
         return projects;
     }
 
+    const newProject = function (name) {
+        const projects = fetchProjects();
+        if (projects.includes(name)) return null;
 
-    return {getTasks, add, remove, replace, fetchId, fetchProjects};
+        localStorage.setItem(name, JSON.stringify([]));
+    }
+
+    const removeProject = function (projectName) {
+        
+        if (!projectName) return null;
+
+        const projects = fetchProjects();
+
+        projectName = String(projectName);
+
+        if (projects.includes(projectName)) {
+            localStorage.removeItem(projectName);
+        }
+    }
+
+
+    return {getTasks, add, remove, replace, fetchId, fetchProjects, newProject,
+        removeProject};
 })();
 
 export default storageHandler;

@@ -13,7 +13,7 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: $color5;
+    background-color: #ffffff;
 }
 
 #content {
@@ -45,7 +45,11 @@ body {
     font-family: inherit;
     transition: all 0.1s ease-in-out;
     &:hover {
-        transform: translateY(2px);
+        transform: translateY(-2px);
         background-color: $color3;
     }
+}
+
+button:active {
+    filter: brightness(1.2);
 }

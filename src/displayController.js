@@ -209,6 +209,7 @@ const displayController = (function() {
             priority: priority.getAttribute('data-value')
         }
         const selectedProject = document.querySelector('.selected-project');
+        if (selectedProject === null) return null;
 
         taskHandler.insertTask(selectedProject.textContent, task);
 
@@ -229,16 +230,28 @@ const displayController = (function() {
     // update current projects in storage to the DOM
     const updateProjects = function () {
         const projects = storageHandler.fetchProjects();
+        
+        let selected = document.querySelector('.selected-project');
+        if (selected !== null) selected = selected.textContent;
         projectsContainer.innerHTML = '';
-        console.log(projects);
 
         projects.forEach((pr) => {
             const project = document.createElement('button');
             project.className = 'project';
+            
+            // keep selection on selected project after reseting projects
+            if (selected !== null && pr === selected) {
+                project.classList.add('selected-project');
+            } 
             project.textContent = pr;
             project.onclick = selectProject;
             projectsContainer.appendChild(project);
-        })
+        });
+
+
+        if (selected === null && projects.length > 0) {
+            document.querySelectorAll('.project')[0].classList.add('selected-project');
+        }
     };
 
     const taskContainer = document.getElementById('tasks');
@@ -252,8 +265,12 @@ const displayController = (function() {
 
     }
 
-    const viewTasks = function () {
+    function viewTasks () {
         const selectedProject = document.querySelector('.selected-project');
+        if (selectedProject === null) {
+            taskContainer.innerHTML = '';
+            return null;
+        }
         const projectTasks = storageHandler.getTasks(selectedProject.textContent);
 
         taskContainer.innerHTML = '';
@@ -322,11 +339,102 @@ const displayController = (function() {
     }
 
 
+    // create new projects from new project button
+    const newProject = document.getElementById('new-project');
+    newProject.onclick = () => {
+        showPopup(createProjectForm());
+    }
+
+    function createProject (name) {
+        name = String(name);
+        if (!name) return;
+        storageHandler.newProject(name);
+        updateProjects();
+    }
+
+    function createProjectForm () {
+        const form = document.createElement('div');
+        form.className = 'form';
+        const name = document.createElement('input');
+        name.id = 'new-project-name';
+        name.placeholder = 'Project Name';
+        
+        const confirm = document.createElement('button');
+        confirm.className = 'confirm';
+        confirm.textContent = 'Add Project';
+        confirm.onclick = () => {
+            createProject(name.value);
+            hidePopup();
+        }
+
+        const cancel = document.createElement('button');
+        cancel.className = 'cancel';
+        cancel.textContent = 'Cancel';
+        cancel.onclick = hidePopup;
+
+        form.append(name, confirm, cancel);
+
+        return form;
+
+    }
+
+    // delete project button functionality
+    const removeProjectButton = document.getElementById('remove-project');
+    removeProjectButton.onclick = removeProjectForm;
+    
+    function removeProjectForm () {
+        const selected = document.querySelector('.selected-project');
+        if (selected === null ) return;
+
+        showPopup(createRemoveForm(selected.textContent, removeProject));
+
+    }
+
+    function removeProject () {
+        const selectedProject = document.querySelector('.selected-project');
+        if (selectedProject === null) return null;
+
+        storageHandler.removeProject(selectedProject.textContent);
+        
+        updateProjects();
+        const currentProjcets = document.querySelectorAll('.project');
+        if (currentProjcets.length > 0) {
+            currentProjcets[0].classList.add('selected-project');
+        }
+        viewTasks();
+    }
+    
+    function createRemoveForm (name, func) {
+        const form = document.createElement('div');
+        form.className = 'form';
+
+        const message = document.createElement('p');
+        message.className = 'message';
+        message.textContent = `Are you sure you want to remove ${name}?`
+
+        const confirm = document.createElement('button');
+        confirm.className = 'confirm';
+        confirm.textContent = 'Confirm';
+        confirm.onclick = () => {
+            func();
+            hidePopup();
+        }
+
+        const cancel = document.createElement('button');
+        cancel.className = 'cancel';
+        cancel.textContent = 'Cancel';
+        cancel.onclick = hidePopup;
+
+        form.append(message, confirm, cancel);
+        return form;
+    }
+
+
     updateProjects();
     
     if (document.querySelector('.selected-project') === null
     && document.getElementById('projects').hasChildNodes()) {
-        document.querySelector('#projects:first-child').classList.add('selected-project');
+        document.querySelector('.project:first-child').classList.add('selected-project');
     }
     
     viewTasks();
