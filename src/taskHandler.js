@@ -12,12 +12,13 @@ const taskHandler = (function () {
         task.date = taskObject.date || 'No Date';
         task.color = taskObject.color || '#ffffff';
         task.completed = taskObject.completed || false;
-        task.id = storageHandler.fetchId();
+        task.id = String(taskObject.id || storageHandler.fetchId());
 
         return task;
     }
 
     const insertTask = function (project, taskObject) {
+      
         const task = _create(taskObject);
         if (task === null) return null;
 
@@ -25,9 +26,14 @@ const taskHandler = (function () {
 
         if (project === '' || project === 'null') project = 'Default';
 
-        storageHandler.add(project, task);
+        if (taskObject.id !== null) {
+            storageHandler.replace(project, task.id, task);
+        } else {
+            storageHandler.add(project, task);
+        }
 
     }
+
 
     return {insertTask};
 })();

@@ -121,7 +121,7 @@ const displayController = (function() {
     
 
 
-    const createForm = function(ConfirmButtonName) {
+    const createForm = function(ConfirmButtonName, taskDetails = {}) {
         
         // creating inputs for the task data (title, description, date)
         const form = document.createElement('div');
@@ -130,16 +130,19 @@ const displayController = (function() {
         const title = document.createElement('input');
         title.className = 'title';
         title.placeholder = 'title';
+        title.value = taskDetails.title || '';
 
         const desc = document.createElement('textarea');
         desc.className = 'desc';
         desc.placeholder = 'Description';
+        desc.value = taskDetails.desc || '';
 
         const bottomContainer = document.createElement('div');
         
         const date = document.createElement('input');
         date.type = 'date';
         date.className = 'date';
+        date.value = taskDetails.date || '';
         
         const bottomRightContainer = document.createElement('div');
 
@@ -152,7 +155,7 @@ const displayController = (function() {
         priority.className = 'priority';
         priority.style.position = 'relative';
         
-        priority.setAttribute('data-value', '4');
+        priority.setAttribute('data-value', (taskDetails.priority || '3'));
         priority.textContent = priority.getAttribute('data-value');
         priority.onclick = _showPrioritySelector;
         priorityContainer.append(priorityLabel, priority);
@@ -163,7 +166,7 @@ const displayController = (function() {
         const color = document.createElement('button');
         color.className = 'color';
 
-        color.setAttribute('data-value', '#aaaaaa');
+        color.setAttribute('data-value', (taskDetails.color || '#aaaaaa'));
         color.style.backgroundColor = color.getAttribute('data-value');
         color.style.position = 'relative';
         color.onclick = _showColorSelector;
@@ -188,7 +191,7 @@ const displayController = (function() {
         confirm.textContent = ConfirmButtonName || 'Save';
         confirm.className = 'confirm';
         confirm.onclick = () => {
-            confirmTask(title, desc, color, priority, date);
+            confirmTask(title, desc, color, priority, date, taskDetails.id);
         }
 
         buttonContainer.append(cancel, confirm);
@@ -201,12 +204,14 @@ const displayController = (function() {
 
 
     // getting the form inputs to create/edit a task
-    function confirmTask (title, desc, color, priority) {
+    function confirmTask (title, desc, color, priority, date, id) {
         const task = {
             title: title.value || 'Untitled',
             desc: desc.value || '',
             color: color.getAttribute('data-value'),
-            priority: priority.getAttribute('data-value')
+            priority: priority.getAttribute('data-value'),
+            date: date.value || 'No Date',
+            id: id || null
         }
         const selectedProject = document.querySelector('.selected-project');
         if (selectedProject === null) return null;
@@ -294,6 +299,8 @@ const displayController = (function() {
         const taskElement = document.createElement('div');
         taskElement.className = 'task';
         taskElement.style.borderColor = task.color;
+        taskElement.setAttribute('data-task-id', task.id);
+        if (task.completed) taskElement.classList.add('completed');
 
         const priorityMultiplier = 100 - 20*task.priority;
         taskElement.style.flexBasis = `${150 + priorityMultiplier}px`;
@@ -312,7 +319,7 @@ const displayController = (function() {
 
         const date = document.createElement('div');
         date.textContent = task.date;
-        date.className = 'task-date';
+        date.className = 'task-date';document.querySelectorAll('.project')
 
         const actionButtons = document.createElement('div');
         actionButtons.className = 'task-buttons';
@@ -320,14 +327,19 @@ const displayController = (function() {
         const complete = document.createElement('img');
         complete.src = completeIcon;
         complete.alt = 'Complete';
+        complete.onclick = completeTask;
 
         const edit = document.createElement('img');
         edit.src = editIcon;
         edit.alt = 'Edit';
+        edit.onclick = editTask;
+
 
         const remove = document.createElement('img');
         remove.src = removeIcon;
         remove.alt = 'Remove';
+        remove.onclick = removeTask;
+
 
         actionButtons.append(remove, edit, complete);
 
@@ -336,6 +348,43 @@ const displayController = (function() {
         taskElement.append(title, desc, bottomContainer);
 
         taskContainer.append(taskElement);
+    }
+
+
+    // TASK BUTTONS FUNCTIONALITY
+    function completeTask () {
+        const task = this.parentElement.parentElement.parentElement;
+        const id = task.getAttribute('data-task-id');
+        const selectedProject = document.querySelector('.selected-project');
+        if (selectedProject === null) return null;
+
+        task.classList.toggle('completed');
+        storageHandler.toggleCompletion(selectedProject.textContent, id);
+    }
+
+    function editTask () {
+        const task = this.parentElement.parentElement.parentElement;
+        const id = task.getAttribute('data-task-id');
+        const selectedProject = document.querySelector('.selected-project');
+        if (selectedProject === null) return null;
+
+        const taskObject = storageHandler.fetchTask(selectedProject.textContent, id);
+        
+        showPopup(createForm('Save', taskObject));
+    }
+
+    function removeTask () {
+        const task = this.parentElement.parentElement.parentElement;
+        const id = task.getAttribute('data-task-id');
+        const selectedProject = document.querySelector('.selected-project');
+        if (selectedProject === null) return null;
+
+        showPopup(createRemoveForm('this task', () => {
+            storageHandler.remove(selectedProject.textContent, id);
+            viewTasks();
+        }));
+
+
     }
 
 

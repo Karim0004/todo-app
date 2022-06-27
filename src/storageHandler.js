@@ -19,6 +19,18 @@ const storageHandler = (function() {
         localStorage.setItem(project, JSON.stringify(tasks));
     }
 
+    const fetchTask = function (project, id) {
+        const tasks = getTasks(project);
+        if (tasks === null) return null;
+
+        for (let i in tasks) {
+            if (tasks[i].id === id) {
+
+                return tasks[i];
+            }
+        }
+        return null;
+    }
     // remove a task
     const remove = function (project, id) {
         const tasks = getTasks(project);
@@ -49,13 +61,31 @@ const storageHandler = (function() {
     }
 
 
+    const toggleCompletion = function (project, id) {
+        const tasks = getTasks(project);
+        if (tasks === null) return null;
+
+        for (let i in tasks) {
+            if (tasks[i].id === id) {
+                tasks[i].completed = !tasks[i].completed;
+                console.log('ytyy');
+                localStorage.setItem(project, JSON.stringify(tasks));
+                return true;
+            }
+        }
+        return false;
+
+
+    }
+
+
     // fetch an id from storage and increment the stored id for next fetch
     const fetchId = function() {
         let id = localStorage.getItem('ID_STORAGE');
         if (id === null) id = '0';
         id = Number(id);
         let nextId = id + 1;
-        localStorage.setItem('ID_STORAGE', nextId.toString);
+        localStorage.setItem('ID_STORAGE', nextId.toString());
         return id;
     }
 
@@ -94,7 +124,7 @@ const storageHandler = (function() {
 
 
     return {getTasks, add, remove, replace, fetchId, fetchProjects, newProject,
-        removeProject};
+        removeProject, toggleCompletion, fetchTask};
 })();
 
 export default storageHandler;
